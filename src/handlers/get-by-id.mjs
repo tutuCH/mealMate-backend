@@ -2,8 +2,8 @@
 
 // Create a DocumentClient that represents the query to add an item
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
-const client = new DynamoDBClient({});
+import { DynamoDBDocumentClient, GetCommand, BatchExecuteStatementCommand } from '@aws-sdk/lib-dynamodb';
+const client = new DynamoDBClient({ region: "us-east-1" });
 const ddbDocClient = DynamoDBDocumentClient.from(client);
 
 // Get the DynamoDB table name from environment variables
@@ -30,18 +30,29 @@ export const getByIdHandler = async (event) => {
   };
 
   try {
-    const data = await ddbDocClient.send(new GetCommand(params));
-    var item = data.Item;
+    console.log(1)
+    const command = new BatchExecuteStatementCommand(params);
+    console.log(2)
+    // const data = await ddbDocClient.send(command);
+    ddbDocClient.send(command, (err, data) => {
+      console.log(`3 -> error: ${err} | data: ${data}`)
+      var item = data.Item;
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify(item)
+      };
+        // All log statements are written to CloudWatch
+      console.info(`response from: ${event.path} statusCode: ${response.statusCode} body: ${response.body}`);
+      return response;
+      
+    })
+    // const data = await ddbDocClient.send(new GetCommand(params));
   } catch (err) {
-    console.log("Error", err);
+    console.error("Error", err);
+    return {error: err}
   }
  
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify(item)
-  };
+
  
-  // All log statements are written to CloudWatch
-  console.info(`response from: ${event.path} statusCode: ${response.statusCode} body: ${response.body}`);
-  return response;
+
 }
