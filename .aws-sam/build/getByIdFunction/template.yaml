@@ -106,7 +106,34 @@ Resources:
         Type: String
       ProvisionedThroughput:
         ReadCapacityUnits: 2
+        WriteCapacityUnits: 2  
+  Restaurant:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 2
         WriteCapacityUnits: 2
+  User:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 2
+  Feed:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 2        
 
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group

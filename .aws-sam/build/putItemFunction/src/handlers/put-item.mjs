@@ -5,7 +5,6 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 const client = new DynamoDBClient({});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
-
 // Get the DynamoDB table name from environment variables
 const tableName = process.env.SAMPLE_TABLE;
 
@@ -32,7 +31,9 @@ export const putItemHandler = async (event) => {
     };
 
     try {
+        console.log(1)
         const data = await ddbDocClient.send(new PutCommand(params));
+        console.log(2)
         console.log("Success - item added or updated", data);
       } catch (err) {
         console.log("Error", err.stack);
